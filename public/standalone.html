@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOMO - Fear of Missing Out | Never Miss a Drop Again</title>
+    <meta name="description" content="Real-time drop monitoring and automation for sneakers, tech, tickets, and exclusive releases. Beat the bots with FOMO." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: 0 0% 4%;
+            --foreground: 0 0% 98%;
+            --card: 0 0% 9%;
+            --card-foreground: 0 0% 98%;
+            --primary: 51 100% 50%;
+            --primary-foreground: 0 0% 4%;
+            --secondary: 280 100% 40%;
+            --secondary-foreground: 0 0% 98%;
+            --muted: 0 0% 15%;
+            --muted-foreground: 0 0% 60%;
+            --border: 0 0% 13%;
+            --success: 142 76% 36%;
+            --warning: 38 92% 50%;
+            --destructive: 0 84% 60%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid hsl(var(--border));
+            background-color: hsla(var(--background), 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            height: 5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            display: flex;
+            height: 3rem;
+            width: 3rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            background: linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--secondary)));
+        }
+
+        .logo-icon svg {
+            height: 1.75rem;
+            width: 1.75rem;
+            fill: hsl(var(--primary-foreground));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: hsl(var(--primary));
+            letter-spacing: -0.025em;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        nav {
+            display: none;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        @media (min-width: 768px) {
+            nav {
+                display: flex;
+            }
+        }
+
+        .nav-button {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            background: transparent;
+            border: none;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+
+        .nav-button:hover {
+            background-color: hsl(var(--muted));
+        }
+
+        .cta-button {
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: hsl(var(--primary) / 0.9);
+            box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 5rem 0 8rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero {
+                padding: 8rem 0;
+            }
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom right, hsl(var(--primary) / 0.1), transparent, hsl(var(--secondary) / 0.1));
+        }
+
+        .hero-content {
+            position: relative;
+            max-width: 56rem;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid hsl(var(--primary) / 0.2);
+            background-color: hsl(var(--primary) / 0.1);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 4.5rem;
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--primary)));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-description {
+                font-size: 1.25rem;
+            }
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero-buttons {
+                flex-direction: row;
+            }
+        }
+
+        .button-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .button-outline {
+            background: transparent;
+            border: 1px solid hsl(var(--primary) / 0.3);
+            color: hsl(var(--foreground));
+        }
+
+        .button-outline:hover {
+            background-color: hsl(var(--primary) / 0.1);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            border-top: 1px solid hsl(var(--border));
+            padding-top: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            border-bottom: 1px solid hsl(var(--border));
+            background-color: hsl(var(--card));
+            padding: 1rem 0;
+        }
+
+        .stats-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .pulse-indicator {
+            position: relative;
+            height: 0.75rem;
+            width: 0.75rem;
+        }
+
+        .pulse-dot {
+            position: absolute;
+            display: inline-flex;
+            height: 100%;
+            width: 100%;
+            border-radius: 9999px;
+            background-color: hsl(var(--success));
+            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+            opacity: 0.75;
+        }
+
+        .pulse-center {
+            position: relative;
+            display: inline-flex;
+            height: 0.75rem;
+            width: 0.75rem;
+            border-radius: 9999px;
+            background-color: hsl(var(--success));
+        }
+
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Live Status Section */
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            border: 1px solid hsl(var(--border));
+            background: transparent;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-button.active {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        .filter-button:hover:not(.active) {
+            background-color: hsl(var(--muted));
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 640px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Drop Card */
+        .drop-card {
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid hsl(var(--border));
+            background-color: hsl(var(--card));
+            transition: all 0.3s;
+        }
+
+        .drop-card:hover {
+            transform: scale(1.02);
+            border-color: hsl(var(--primary) / 0.5);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 0 30px hsl(var(--primary) / 0.2);
+        }
+
+        .card-image-container {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+        }
+
+        .card-image {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .drop-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+        }
+
+        .status-badge {
+            position: absolute;
+            right: 0.75rem;
+            top: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-live {
+            background-color: hsl(var(--success));
+            color: white;
+            box-shadow: 0 0 20px hsl(var(--success) / 0.5);
+        }
+
+        .badge-upcoming {
+            background-color: hsl(var(--warning));
+            color: black;
+            box-shadow: 0 0 20px hsl(var(--warning) / 0.5);
+        }
+
+        .badge-soldout {
+            background-color: hsl(var(--destructive));
+            color: white;
+            box-shadow: 0 0 20px hsl(var(--destructive) / 0.5);
+        }
+
+        .card-content {
+            padding: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            color: hsl(var(--foreground) / 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .time-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            background-color: hsl(var(--muted));
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .time-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .card-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .card-button-outline {
+            background: transparent;
+            border-color: hsl(var(--border));
+            color: hsl(var(--foreground));
+        }
+
+        .card-button-outline:hover {
+            background-color: hsl(var(--muted));
+        }
+
+        .card-button-primary {
+            background-color: hsl(var(--primary));
+            border-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .card-button-primary:hover {
+            background-color: hsl(var(--primary) / 0.9);
+        }
+
+        /* Featured Drops */
+        .featured-section {
+            border-top: 1px solid hsl(var(--border));
+            background-color: hsl(var(--muted) / 0.3);
+            padding: 4rem 0;
+        }
+
+        .featured-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .featured-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .featured-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid hsl(var(--border));
+            background-color: hsl(var(--card));
+            transition: all 0.3s;
+        }
+
+        .featured-card:hover {
+            border-color: hsl(var(--primary) / 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 20px hsl(var(--primary) / 0.1);
+        }
+
+        .featured-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .featured-icon {
+            display: flex;
+            height: 3rem;
+            width: 3rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            background-color: hsl(var(--primary) / 0.1);
+        }
+
+        .featured-icon svg {
+            height: 1.5rem;
+            width: 1.5rem;
+            color: hsl(var(--primary));
+        }
+
+        .demand-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            background-color: hsl(var(--secondary) / 0.2);
+            color: hsl(var(--secondary));
+        }
+
+        .featured-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .featured-venue {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1rem;
+        }
+
+        .featured-activity {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+
+        .activity-label {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .activity-value {
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 5rem 0;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            background-color: hsl(var(--primary) / 0.1);
+            color: hsl(var(--primary));
+            font-size: 0.875rem;
+        }
+
+        .pricing-title {
+            font-size: 2.25rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-subtitle {
+            font-size: 1.125rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .pricing-grid {
+            display: grid;
+            gap: 2rem;
+            max-width: 80rem;
+            margin: 0 auto;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .pricing-card {
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 2px solid hsl(var(--border));
+            background-color: hsl(var(--card));
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: hsl(var(--primary) / 0.3);
+        }
+
+        .pricing-card.popular {
+            border-color: hsl(var(--primary));
+            background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--primary) / 0.05));
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px hsl(var(--primary) / 0.2);
+            transform: scale(1.05);
+        }
+
+        .recommended-badge {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-description {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            color: hsl(var(--primary));
+        }
+
+        .price-period {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .check-icon {
+            margin-top: 0.125rem;
+            height: 1.25rem;
+            width: 1.25rem;
+            flex-shrink: 0;
+            color: hsl(var(--success));
+        }
+
+        .plan-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plan-button.primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 20px hsl(var(--primary) / 0.5);
+        }
+
+        .plan-button.primary:hover {
+            background-color: hsl(var(--primary) / 0.9);
+        }
+
+        .plan-button.secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+        }
+
+        .plan-button.secondary:hover {
+            background-color: hsl(var(--secondary) / 0.9);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid hsl(var(--border));
+            background-color: hsl(var(--card));
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            height: 2.5rem;
+            width: 2.5rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            background: linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--secondary)));
+        }
+
+        .footer-logo svg {
+            height: 1.5rem;
+            width: 1.5rem;
+            fill: hsl(var(--primary-foreground));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .footer-brand-name {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: hsl(var(--primary));
+        }
+
+        .footer-description {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .footer-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: hsl(var(--primary));
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid hsl(var(--border));
+            text-align: center;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>FOMO</h1>
+                        <p>Fear of Missing Out</p>
+                    </div>
+                </div>
+
+                <nav>
+                    <button class="nav-button">Drops</button>
+                    <button class="nav-button">Releases</button>
+                    <button class="nav-button">Tickets</button>
+                    <button class="nav-button">Alerts</button>
+                </nav>
+
+                <button class="cta-button">Get Bot Access</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    <span>Live monitoring 247 drops across 50+ retailers</span>
+                </div>
+
+                <h1>
+                    Stop Missing Out.<br>
+                    <span class="gradient-text">Start Winning.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Your centralized hub for every high-demand drop and ticket release—plus the automation tools you need to secure them.
+                </p>
+
+                <div class="hero-buttons">
+                    <button class="cta-button button-lg">
+                        Get Started Now
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                    <button class="cta-button button-lg button-outline">
+                        View Live Drops
+                    </button>
+                </div>
+
+                <div class="hero-stats">
+                    <div>
+                        <div class="stat-value">98.4%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div>
+                        <div class="stat-value">247</div>
+                        <div class="stat-label">Active Drops</div>
+                    </div>
+                    <div>
+                        <div class="stat-value">15K+</div>
+                        <div class="stat-label">Members</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="container">
+            <div class="stats-content">
+                <div class="pulse-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="pulse-center"></span>
+                </div>
+                <span style="font-size: 0.875rem; font-weight: 600;">LIVE MONITORING ACTIVE</span>
+                <div style="display: none; align-items: center; gap: 0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: hsl(var(--primary));"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <span style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Real-time feeds locked on all major vendors</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Status Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Live Drop Status</h2>
+                <p class="section-subtitle">Real-time monitoring across all major platforms</p>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="filter-button active" data-filter="all">All Drops</button>
+                <button class="filter-button" data-filter="sneakers">Sneakers</button>
+                <button class="filter-button" data-filter="tech">Tech</button>
+                <button class="filter-button" data-filter="tickets">Tickets</button>
+                <button class="filter-button" data-filter="streetwear">Streetwear</button>
+            </div>
+
+            <div class="card-grid" id="drops-container">
+                <!-- Drop cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Drops -->
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header" style="text-align: center;">
+                <h2 class="section-title">Trending Right Now</h2>
+                <p class="section-subtitle">Most sought-after drops across all categories</p>
+            </div>
+
+            <div class="featured-grid">
+                <div class="featured-card">
+                    <div class="featured-header">
+                        <div class="featured-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <span class="demand-badge">Extreme</span>
+                    </div>
+                    <h3 class="featured-title">Taylor Swift Eras Tour</h3>
+                    <p class="featured-venue">Multiple Cities</p>
+                    <div class="featured-activity">
+                        <span class="activity-label">Activity:</span>
+                        <span class="activity-value">2.4M+</span>
+                    </div>
+                </div>
+
+                <div class="featured-card">
+                    <div class="featured-header">
+                        <div class="featured-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                        </div>
+                        <span class="demand-badge">Very High</span>
+                    </div>
+                    <h3 class="featured-title">RTX 4090 Restocks</h3>
+                    <p class="featured-venue">Major Retailers</p>
+                    <div class="featured-activity">
+                        <span class="activity-label">Activity:</span>
+                        <span class="activity-value">Live Tracking</span>
+                    </div>
+                </div>
+
+                <div class="featured-card">
+                    <div class="featured-header">
+                        <div class="featured-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <span class="demand-badge">High</span>
+                    </div>
+                    <h3 class="featured-title">Supreme Box Logo</h3>
+                    <p class="featured-venue">Supreme NYC</p>
+                    <div class="featured-activity">
+                        <span class="activity-label">Activity:</span>
+                        <span class="activity-value">Weekly Drop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="pricing-header">
+                <div class="pricing-badge">Premium Service</div>
+                <h2 class="pricing-title">Beat the Bots</h2>
+                <p class="pricing-subtitle">Proprietary automation technology designed for exclusive drops</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="plan-name">Standard Bot</div>
+                    <p class="plan-description">Perfect for casual drops</p>
+                    <div class="plan-price">
+                        <span class="price-amount">$149</span>
+                        <span class="price-period">/ lifetime</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Sneaker drops (Nike, Adidas)</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Single account operation</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Basic anti-bot bypass</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Email notifications</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Discord access</span>
+                        </li>
+                    </ul>
+                    <button class="plan-button secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Get Started
+                    </button>
+                </div>
+
+                <div class="pricing-card popular">
+                    <div class="recommended-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        RECOMMENDED
+                    </div>
+                    <div class="plan-name">Apex Master</div>
+                    <p class="plan-description">For serious collectors</p>
+                    <div class="plan-price">
+                        <span class="price-amount">$399</span>
+                        <span class="price-period">/ lifetime</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>ALL drop bots included</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Ticketmaster/Live Nation bypass</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Multi-proxy support</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Premium resale scraper</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Priority Discord access</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>24/7 support</span>
+                        </li>
+                        <li>
+                            <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Early drop alerts</span>
+                        </li>
+                    </ul>
+                    <button class="plan-button primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Go Pro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </div>
+                        <span class="footer-brand-name">FOMO</span>
+                    </div>
+                    <p class="footer-description">Your exclusive edge for high-demand drops since 2025.</p>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Live Drops</a></li>
+                        <li><a href="#">Bot Access</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Bot Status</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Discord</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 FOMO Technologies. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Drop data
+        const drops = [
+            {
+                id: 1,
+                title: "iPhone 16 Pro Max",
+                subtitle: "Pre-Order Wave 2",
+                status: "upcoming",
+                timeLeft: "48h 23m",
+                image: "https://i.postimg.cc/v47KY6h4/iphone-jpeg.png",
+                category: "tech",
+                description: "Next drop Friday, 8 AM EST. High-speed automation critical.",
+            },
+            {
+                id: 2,
+                title: "Jordan 1 Retro",
+                subtitle: "Shadow 2.0",
+                status: "live",
+                timeLeft: "Live Now",
+                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400",
+                category: "sneakers",
+                description: "Nike SNKRS drop active. Limited stock detected.",
+            },
+            {
+                id: 3,
+                title: "Cosmic Echo Premiere",
+                subtitle: "IMAX Fan Event",
+                status: "live",
+                timeLeft: "Live Now",
+                image: "https://i.postimg.cc/nsHPCcSZ/movie-jpeg.png",
+                category: "tickets",
+                description: "Limited tickets released for LA, NYC, London venues.",
+            },
+            {
+                id: 4,
+                title: "PS5 Restock",
+                subtitle: "Major Retailers",
+                status: "upcoming",
+                timeLeft: "12h 45m",
+                image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400",
+                category: "tech",
+                description: "Walmart & Target confirmed drops. Bot advantage high.",
+            },
+            {
+                id: 5,
+                title: "Supreme Drop",
+                subtitle: "Week 12 FW24",
+                status: "live",
+                timeLeft: "Live Now",
+                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
+                category: "streetwear",
+                description: "Thursday 11 AM drop. Jackets and accessories live.",
+            },
+        ];
+
+        const statusConfig = {
+            live: {
+                badge: "Live Now",
+                class: "badge-live",
+            },
+            upcoming: {
+                badge: "Upcoming",
+                class: "badge-upcoming",
+            },
+            soldout: {
+                badge: "Sold Out",
+                class: "badge-soldout",
+            },
+        };
+
+        let activeFilter = "all";
+
+        function renderDrops() {
+            const container = document.getElementById("drops-container");
+            const filteredDrops = activeFilter === "all" 
+                ? drops 
+                : drops.filter(drop => drop.category === activeFilter);
+
+            container.innerHTML = filteredDrops.map(drop => {
+                const config = statusConfig[drop.status];
+                return `
+                    <div class="drop-card">
+                        <div class="card-image-container">
+                            <img src="${drop.image}" alt="${drop.title}" class="card-image">
+                            <div class="image-overlay"></div>
+                            <div class="status-badge ${config.class}">${config.badge}</div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">${drop.title}</h3>
+                            <p class="card-subtitle">${drop.subtitle}</p>
+                            <p class="card-description">${drop.description}</p>
+                            <div class="time-box">
+                                <span class="time-label">Drop Time:</span>
+                                <span class="time-value">${drop.timeLeft}</span>
+                            </div>
+                            <div class="card-buttons">
+                                <button class="card-button card-button-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                    View Drop
+                                </button>
+                                <button class="card-button card-button-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                    Use Bot
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                activeFilter = button.getAttribute('data-filter');
+                renderDrops();
+            });
+        });
+
+        // Initial render
+        renderDrops();
+    </script>
+</body>
+</html>
