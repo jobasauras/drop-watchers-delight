@@ -1,77 +1,25 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropCard } from "@/components/DropCard";
+import { useDrops } from "@/hooks/useDrops";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LiveStatusSectionProps {
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
 }
 
-const drops = [
-  {
-    id: 1,
-    title: "iPhone 16 Pro Max",
-    subtitle: "Pre-Order Wave 2",
-    status: "upcoming" as const,
-    timeLeft: "48h 23m",
-    image: "https://i.postimg.cc/v47KY6h4/iphone-jpeg.png",
-    category: "tech",
-    description: "Next drop Friday, 8 AM EST. High-speed automation critical.",
-  },
-  {
-    id: 2,
-    title: "Jordan 1 Retro",
-    subtitle: "Shadow 2.0",
-    status: "live" as const,
-    timeLeft: "Live Now",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400",
-    category: "sneakers",
-    description: "Nike SNKRS drop active. Limited stock detected.",
-  },
-  {
-    id: 3,
-    title: "Cosmic Echo Premiere",
-    subtitle: "IMAX Fan Event",
-    status: "live" as const,
-    timeLeft: "Live Now",
-    image: "https://i.postimg.cc/nsHPCcSZ/movie-jpeg.png",
-    category: "tickets",
-    description: "Limited tickets released for LA, NYC, London venues.",
-  },
-  {
-    id: 4,
-    title: "PS5 Restock",
-    subtitle: "Major Retailers",
-    status: "upcoming" as const,
-    timeLeft: "12h 45m",
-    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400",
-    category: "tech",
-    description: "Walmart & Target confirmed drops. Bot advantage high.",
-  },
-  {
-    id: 5,
-    title: "Supreme Drop",
-    subtitle: "Week 12 FW24",
-    status: "live" as const,
-    timeLeft: "Live Now",
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
-    category: "streetwear",
-    description: "Thursday 11 AM drop. Jackets and accessories live.",
-  },
-];
-
 const filters = [
   { id: "all", label: "All Drops" },
   { id: "sneakers", label: "Sneakers" },
   { id: "tech", label: "Tech" },
   { id: "tickets", label: "Tickets" },
-  { id: "streetwear", label: "Streetwear" },
+  { id: "collectibles", label: "Collectibles" },
+  { id: "gaming", label: "Gaming" },
 ];
 
 export const LiveStatusSection = ({ activeFilter, setActiveFilter }: LiveStatusSectionProps) => {
-  const filteredDrops = activeFilter === "all" 
-    ? drops 
-    : drops.filter(drop => drop.category === activeFilter);
+  const { data: drops, isLoading } = useDrops(activeFilter);
 
   return (
     <section className="py-16">
@@ -96,9 +44,27 @@ export const LiveStatusSection = ({ activeFilter, setActiveFilter }: LiveStatusS
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredDrops.map((drop) => (
-            <DropCard key={drop.id} {...drop} />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-[400px] w-full" />
+            ))
+          ) : drops && drops.length > 0 ? (
+            drops.map((drop) => (
+              <DropCard
+                key={drop.id}
+                title={drop.title}
+                subtitle={drop.subtitle || ""}
+                status={drop.status as "live" | "upcoming" | "soldout"}
+                timeLeft={drop.time_left || ""}
+                image={drop.image_url || ""}
+                description={drop.description || ""}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-muted-foreground">No drops found in this category</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
